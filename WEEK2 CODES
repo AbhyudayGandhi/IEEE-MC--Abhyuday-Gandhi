@@ -1,0 +1,183 @@
+//E-1
+
+class Solution {
+public:
+    int climbStairs(int n) {
+        if (n<=2) 
+	return n;
+        int a=1, b=2, c;
+        for (int i=3; i<=n; i++) {
+        c=a+b;
+        a=b;
+        b=c;
+        }
+        return b;
+    }
+};
+---------------------------------------------------------
+//E-2
+
+class Solution {
+public:
+    vector<int> smallerNumbersThanCurrent(vector<int>& nums) {
+        vector<int> count(101, 0);
+        for (int n:nums) 
+        count[n]++;
+        for (int i=1; i<101; i++) 
+        count[i] += count[i - 1];
+        vector<int> res;
+        for (int n : nums) {
+            if (n == 0)
+            res.push_back(0);
+            else 
+            res.push_back(count[n-1]);
+        }
+        return res;
+    }
+};
+-----------------------------------------------------------
+//E-3
+
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_map<int, int> mp;
+        for (int i=0; i<nums.size(); i++) {
+            int need=target-nums[i];
+            if (mp.count(need)) 
+            return {mp[need], i};
+            
+            mp[nums[i]] = i;
+        }
+        return {};
+    }
+};
+-----------------------------------------------------------
+//E-4
+
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int minpri=INT_MAX;
+        int maxpro=0;
+        for (int p:prices) {
+            minpri=min(minpri, p);
+            maxpro=max(maxpro, p - minpri);
+        }
+        return maxpro;
+    }
+};
+------------------------------------------------------------
+//E-5
+
+class Solution {
+public:
+    bool isUgly(int n) {
+        if (n <= 0) return false;
+        while (n%2==0) 
+        n/=2;
+        while (n%3==0) 
+        n/=3;
+        while (n%5==0)
+        n/=5;
+        return n==1;
+    }
+};
+-------------------------------------------------------------
+
+
+
+//A-1
+
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int l = 0,r=height.size()-1, ans=0;
+        while (l<r) {
+            ans=max(ans, min(height[l], height[r])*(r - l));
+            if (height[l] < height[r]) 
+            l++;
+            else 
+            r--;
+        }
+        return ans;
+    }
+};
+---------------------------------------------------------------
+
+//A-2
+
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int cur=nums[0], l=nums[0];
+        for (int i = 1; i < nums.size(); i++) {
+            cur=max(nums[i], cur+nums[i]);
+            l=max(l, cur);
+        }
+        return l;
+    }
+};
+----------------------------------------------------------------
+
+//A-3
+
+class Solution {
+public:
+    int candy(vector<int>& ratings) {
+        int n = ratings.size();
+        vector<int> candi(n, 1);
+        for (int i=1; i<n; i++)
+            if (ratings[i]>ratings[i-1])
+                candi[i]=candi[i-1]+1;
+        for (int i= n-2; i>=0; i--)
+            if (ratings[i]>ratings[i+1])
+                candi[i]=max(candi[i], candi[i+1]+1);
+        int total=0;
+        for (int x: candi)
+        total =total+x ;
+        return total;
+    }
+};
+------------------------------------------------------------------
+
+//A-4
+
+class Solution {
+public:
+    int maxEnvelopes(vector<vector<int>>& env) {
+        sort(env.begin(), env.end(), [](auto& a, auto& b) {
+            return a[0]==b[0] ? a[1]>b[1] : a[0]<b[0];
+        });
+        vector<int> lis;
+        for (auto& e: env) {
+            int h=e[1];
+            auto it=lower_bound(lis.begin(), lis.end(), h);
+            if (it== lis.end()) lis.push_back(h);
+            else *it=h;
+        }
+        return lis.size();
+    }
+};
+-------------------------------------------------------------------
+
+//A-5
+
+class Solution {
+public:
+    int findRadius(vector<int>& houses, vector<int>& heaters) {
+        sort(houses.begin(), houses.end());
+        sort(heaters.begin(), heaters.end());
+        int res=0;
+        for (int h: houses) {
+            auto it=lower_bound(heaters.begin(), heaters.end(), h);
+            int r1= it==heaters.end() ? INT_MAX : *it- h;
+            int r2= it==heaters.begin() ? INT_MAX : h- *(it - 1);
+            res = max(res, min(r1, r2));
+        }
+        return res;
+    }
+};
+---------------------------------------------------------------------
+
+
