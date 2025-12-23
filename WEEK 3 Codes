@@ -1,0 +1,154 @@
+E1) REMOVE DUPLICATES FROM SORTED LIST
+
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        ListNode* curr= head;
+        while (curr && curr->next){
+            if (curr->val == curr->next->val)
+                {curr->next = curr->next->next;}
+            else{
+                curr = curr->next;}
+        }
+        return head;
+    }
+};
+
+
+E2) INSERTION SORT LIST
+
+class Solution {
+public:
+    ListNode* insertionSortList(ListNode* head){
+        if (head == NULL || head->next ==NULL){
+            return head;}
+
+        ListNode temp(0);
+        temp.next = head;
+
+        ListNode* last = head;
+        ListNode* curr =head->next;
+
+        while (curr != NULL) {
+            if (last->val <= curr->val) {
+                last = curr;
+                curr = curr->next;} 
+            else {
+                ListNode* ptr = &temp;
+                while (ptr->next->val < curr->val){
+                    ptr = ptr->next;
+                }
+
+                last->next = curr->next;
+                curr->next = ptr->next;
+                ptr->next = curr;
+                curr = last->next;
+            }
+        }
+        return temp.next;
+    }
+};
+
+
+
+E3) DESIGN CIRCULAR QUEUE
+
+class MyCircularQueue {
+public:
+    int *arr;
+    int front;
+    int rear;
+    int size;
+
+    MyCircularQueue(int k) {
+        size = k + 1;
+        arr = new int[size];
+        front = 0;
+        rear = 0;
+    }
+
+    bool enQueue(int value) {
+        if (isFull()) return false;
+        arr[rear] = value;
+        rear = (rear + 1) % size;
+        return true;
+    }
+
+    bool deQueue() {
+        if (isEmpty()) 
+            return false;
+        front = (front + 1) % size;
+        return true;
+    }
+
+    int Front() {
+        if (isEmpty()) 
+            return -1;
+        return arr[front];
+    }
+
+    int Rear() {
+        if (isEmpty()) return -1;
+        return arr[(rear-1+size) % size];
+    }
+
+    bool isEmpty(){
+        return front== rear;
+    }
+
+    bool isFull(){
+        return (rear + 1) % size == front;}
+};
+
+
+
+
+E4) ASTEROID COLLISION
+
+class Solution {
+public:
+    vector<int> asteroidCollision(vector<int>& asteroids){
+        vector<int> st;
+
+        for (int i = 0; i < asteroids.size(); i++){
+            int curr = asteroids[i];
+            bool alive = true;
+
+            while (!st.empty() && curr < 0 && st.back() > 0) {
+                if (abs(st.back()) < abs(curr)) {
+                    st.pop_back();
+                    continue;
+                } 
+                else if (abs(st.back()) == abs(curr)) {
+                    st.pop_back();
+                }
+                alive =false;
+                break;
+            }
+
+            if (alive){ 
+                st.push_back(curr);}
+        }
+
+        return st;
+    }
+};
+
+
+
+E5)  WINNER OF THE CICULAR GAME
+
+class Solution {
+public:
+    int findTheWinner(int n, int k) {
+        int win = 0;
+
+        for (int i=1; i <= n; i++) {
+            win = (win+k) % i;
+        }
+
+        return win + 1;
+    }
+};
+
+
