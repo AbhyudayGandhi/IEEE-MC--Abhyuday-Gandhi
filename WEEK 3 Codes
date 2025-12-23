@@ -152,3 +152,158 @@ public:
 };
 
 
+
+A1) DESIGN TWITTER
+
+class Twitter {
+public:
+    int time;
+    unordered_map<int, vector<pair<int,int>>> tweets;
+    unordered_map<int, unordered_set<int>> follows;
+
+    Twitter() {
+        time = 0;
+    }
+
+    void postTweet(int userId, int tweetId) {
+        tweets[userId].push_back({time++, tweetId});
+    }
+
+    vector<int> getNewsFeed(int userId) {
+        priority_queue<pair<int,int>> pq;
+        vector<int> res;
+
+        for (auto &t : tweets[userId])
+            pq.push(t);
+
+        for (int f : follows[userId]) {
+            for (auto &t : tweets[f])
+                pq.push(t);
+        }
+
+        while (!pq.empty() && res.size() < 10) {
+            res.push_back(pq.top().second);
+            pq.pop();
+        }
+
+        return res;
+    }
+
+    void follow(int followerId, int followeeId) {
+        if (followerId != followeeId)
+            follows[followerId].insert(followeeId);
+    }
+
+    void unfollow(int followerId, int followeeId) {
+        follows[followerId].erase(followeeId);
+    }
+};
+
+
+A2) MAXIMUM NUMBER OF ROBOTS WITHIN BUDGET
+
+class Solution {
+public:
+    int maximumRobots(vector<int>& chargeTimes, vector<int>& runningCosts, long long budget) {
+        deque<int> dq;
+        long long sum =0;
+        int left =0;
+        int ans =0;
+
+        for (int right= 0; right < chargeTimes.size(); right++){
+            sum += runningCosts[right];
+
+            while (!dq.empty() && chargeTimes[dq.back()] <= chargeTimes[right])
+                {dq.pop_back();}
+            dq.push_back(right);
+
+            while (!dq.empty() &&
+                   chargeTimes[dq.front()] + (right - left + 1) * sum > budget){
+                if (dq.front() == left)
+                    dq.pop_front();
+                sum -= runningCosts[left];
+                left++;
+            }
+
+            ans = max(ans, right-left+1);
+        }
+
+        return ans;
+    }
+};
+
+
+
+A3) MAX CHUNKS TO MAKE SORTED 2
+
+class Solution {
+public:
+    int maxChunksToSorted(vector<int>& arr) {
+        vector<int> stk;
+
+        for (int x : arr) {
+            if (stk.empty() || x >= stk.back()) {
+                stk.push_back(x);
+            } else {
+                int a = stk.back();
+                while (!stk.empty() && stk.back() > x){
+                    stk.pop_back();}
+                stk.push_back(a);
+            }
+        }
+
+        return stk.size();
+    }
+};
+
+
+A4) DESIGN A TEXT EDITOR
+
+class TextEditor {
+public:
+    deque<char> left, right;
+
+    TextEditor() {}
+
+    void addText(string text){
+        for (char c : text)
+            left.push_back(c);
+    }
+
+    int deleteText(int k) {
+        int cnt = 0;
+        while (k-- && !left.empty()) {
+            left.pop_back();
+            cnt++;}
+        return cnt;
+    }
+
+    string cursorLeft(int k) {
+        while (k-- && !left.empty()) {
+            right.push_front(left.back());
+            left.pop_back();
+        }
+        string res;
+        int cnt = 0;
+        for (int i = max(0, (int)left.size()-10); i < left.size(); i++)
+            res += left[i];
+        return res;
+    }
+
+    string cursorRight(int k) {
+        while (k-- && !right.empty()) {
+            left.push_back(right.front());
+            right.pop_front();
+        }
+        string res;
+        int cnt = 0;
+        for (int i = max(0,(int)left.size()-10); i < left.size(); i++)
+            res += left[i];
+        return res;
+    }
+};
+
+
+A5) POPULATE NEXT RIGHT POINTERS IN EACH
+
+
